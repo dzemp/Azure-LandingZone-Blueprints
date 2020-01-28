@@ -1,0 +1,108 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "Azure Security Center Standard",
+    "description": "Set Security Center to Standard SKU",
+    "dependsOn": [
+    ],
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+      "contentVersion": "1.0.0.1",
+      "parameters": {
+      },
+      "variables": {
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "VirtualMachines",
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "StorageAccounts",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/VirtualMachines')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "AppServices",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/StorageAccounts')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "SqlServers",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/AppServices')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "SqlServerVirtualMachines",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/SqlServers')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "KubernetesService",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/SqlServerVirtualMachines')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "ContainerRegistry",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/KubernetesService')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        },
+        {
+          "type": "Microsoft.Security/pricings",
+          "apiVersion": "2018-06-01",
+          "name": "KeyVaults",
+          "dependsOn": [
+            "[concat('Microsoft.Security/pricings/ContainerRegistry')]"
+          ],
+          "properties": {
+            "pricingTier": "Standard"
+          }
+        }
+      ],
+      "outputs": {
+      }
+    },
+    "parameters": {
+    }
+  }
+}
