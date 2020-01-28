@@ -1,0 +1,117 @@
+{
+    "kind": "template",
+    "properties": {
+        "displayName": "Azure Security Center continuous export",
+        "description": "Configure the continuous export of Security Center",
+        "dependsOn": [
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+            "contentVersion": "1.0.0.1",
+            "parameters": {
+                "ehSubscriptionId": {
+                    "type": "string"
+                },
+                "ehResourceGroup": {
+                    "type": "string"
+                },
+                "ehNameSpace": {
+                    "type": "string"
+                },
+                "ehInstanceName": {
+                    "type": "string"
+                },
+                "ehConnectionString" : {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "ehResourceId": "[concat('/subscriptions/', parameters('ehSubscriptionId'), '/resourcegroups/', parameters('ehResourceGroup'), '/providers/Microsoft.EventHub/namespaces/', parameters('ehNameSpace'), '/eventhubs/', parameters('ehInstanceName'))]",
+                "scopeDescription": "[concat('continuous export for ', subscription().subscriptionId)]",
+                "scopePath": "[concat('/subscriptions/', subscription().subscriptionId)]",
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Security/automations",
+                    "apiVersion": "2019-01-01-preview",
+                    "name": "exportToEventHub",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                        "isEnabled": true,
+                        "scopes": [
+                            {
+                                "description": "[variables('scopeDescription')]",
+                                "scopePath": "[variables('scopePath')]"
+                            }
+                        ],
+                        "sources": [
+                            {
+                                "eventSource": "Alerts",
+                                "ruleSets": [
+                                    {
+                                        "rules": [
+                                            {
+                                                "propertyJPath": "Severity",
+                                                "propertyType": "String",
+                                                "expectedValue": "High",
+                                                "operator": "Equals"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "rules": [
+                                            {
+                                                "propertyJPath": "Severity",
+                                                "propertyType": "String",
+                                                "expectedValue": "Medium",
+                                                "operator": "Equals"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "rules": [
+                                            {
+                                                "propertyJPath": "Severity",
+                                                "propertyType": "String",
+                                                "expectedValue": "Low",
+                                                "operator": "Equals"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "sasPolicyName": "[parameters('ehInstanceName')]",
+                                "eventHubResourceId": "[variables('ehResourceId')]",
+                                "connectionString": "[parameters('ehConnectionString')]",
+                                "actionType": "EventHub"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "outputs": {
+            }
+        },
+        "resourceGroup": "Security-RG",
+        "parameters": {
+            "ehSubscriptionId": {
+                "value": "[parameters('ehSubscriptionId')]"
+            },
+            "ehResourceGroup": {
+                 "value": "[parameters('ehResourceGroup')]"
+            },
+            "ehNameSpace": {
+                "value": "[parameters('ehNameSpace')]"
+            },
+            "ehInstanceName": {
+                "value": "[parameters('ehInstanceName')]"
+            },
+            "ehConnectionString" : {
+                "value": "[parameters('ehConnectionString')]"
+            }
+        }
+    }
+}
