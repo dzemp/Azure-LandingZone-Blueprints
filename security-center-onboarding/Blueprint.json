@@ -1,0 +1,50 @@
+{
+  "properties": {
+    "displayName": "Security-Center-Onboarding",
+    "description": "Blueprint definition for Azure Security Center",
+    "targetScope": "subscription",
+    "parameters": {
+      "ehSubscriptionId": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter the GUID of the used Azure subscription for the Event Hub instance",
+          "description": "ID (GUID) for the used subscription"
+        }
+      },
+      "ehResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter the name of the resource group",
+          "description": "Name of the resource group"
+        }
+      },
+      "ehNameSpace": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter the name of the Event Hub namespace",
+          "description": "Name of the Event Hub namespace"
+        }
+      },
+      "ehInstanceName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter the name of the Event Hub instance",
+          "description": "Name of the Event Hub instance"
+        }
+      },
+      "ehConnectionString": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter the connection string of the Event Hub",
+          "description": "Connection string of the Event Hub"
+        }
+      }
+    },
+    "resourceGroups": {
+      "Security-RG": {
+        "name": "rg_security",
+        "dependsOn": []
+      }
+    }
+  }
+}
