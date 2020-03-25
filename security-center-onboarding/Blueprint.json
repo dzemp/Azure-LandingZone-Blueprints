@@ -4,6 +4,9 @@
     "description": "Blueprint definition for Azure Security Center",
     "targetScope": "subscription",
     "parameters": {
+      "AzureRegion": {
+        "type": "string"
+      },
       "ehSubscriptionId": {
         "type": "string",
         "metadata": {
@@ -38,11 +41,26 @@
           "displayName": "Enter the connection string of the Event Hub",
           "description": "Connection string of the Event Hub"
         }
+      },
+      "email": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter security contact email address",
+          "description": "Security contact email address or addressed separated by a comma"
+        }
+      },
+      "phone": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Enter security contact phone number",
+          "description": "Security contact international phone number"
+        }
       }
     },
     "resourceGroups": {
       "Security-RG": {
         "name": "rg_security",
+        "location": "[parameters('AzureRegion')]",
         "dependsOn": []
       }
     }
