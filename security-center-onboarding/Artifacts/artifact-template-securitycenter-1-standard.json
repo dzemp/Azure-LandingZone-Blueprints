@@ -3,15 +3,19 @@
   "properties": {
     "displayName": "Azure Security Center Standard",
     "description": "Set Security Center to Standard SKU",
-    "dependsOn": [
-    ],
+    "dependsOn": [],
     "template": {
       "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
       "contentVersion": "1.0.0.1",
       "parameters": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
       },
-      "variables": {
-      },
+      "variables": {},
       "resources": [
         {
           "type": "Microsoft.Security/pricings",
@@ -97,12 +101,28 @@
           "properties": {
             "pricingTier": "Standard"
           }
+        },
+        {
+          "type": "Microsoft.Security/securityContacts",
+          "apiVersion": "2017-08-01-preview",
+          "name": "default1",
+          "properties": {
+            "email": "[parameters('email')]",
+            "phone": "[parameters('phone')]",
+            "alertNotifications": "On",
+            "alertsToAdmins": "On"
+          }
         }
       ],
-      "outputs": {
-      }
+      "outputs": {}
     },
     "parameters": {
+      "email": {
+        "value": "[parameters('email')]"
+      },
+      "phone": {
+        "value": "[parameters('phone')]"
+      }
     }
   }
 }
